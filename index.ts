@@ -26,11 +26,11 @@ const options: cors.CorsOptions = {
       'X-Requested-With',
       'Content-Type',
       'Accept',
-      'X-Access-Token',
+      'X-Access-Token'
     ],
     credentials: true,
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-    origin: ( process.env.HOSTED_CLIENT_URI ||'http://localhost:3000' ),
+    origin: 'https://oauth-frontend.netlify.app' ,
     preflightContinue: false,
 };
 
