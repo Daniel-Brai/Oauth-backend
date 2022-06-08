@@ -1,0 +1,3 @@
+# Dependencies to ignore
+node_modules/
+.env
