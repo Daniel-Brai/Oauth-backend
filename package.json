@@ -1,6 +1,10 @@
 {
   "name": "oauth2.0_authentication_with_passport",
   "version": "1.0.0",
+  "engines": {
+    "node": "16.14.0",
+    "npm": "8.3.1"
+  },
   "description": "A server for oauth2.0 services",
   "main": "index.js",
   "scripts": {
