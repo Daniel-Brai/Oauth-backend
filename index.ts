@@ -37,12 +37,18 @@ const options: cors.CorsOptions = {
 // app middlewares
 app.use(express.json())
 app.use(cors(options))
+app.set("trust proxy", 1)
 app.use(
-    session({
-        secret: process.env.SESSION_SECRET_KEY || 'John is a cat Man'  , 
-        resave: true,
-        saveUninitialized: true
-    })
+  session({
+    secret: process.env.SESSION_SECRET_KEY || 'John is a cat Man'  , 
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      sameSite: "none",
+      secure: true,
+      maxAge: 1000 * 60 *60 * 24 * 7
+    }
+  })
 )
 app.use(passport.initialize())
 app.use(passport.session())
@@ -55,7 +61,6 @@ passport.serializeUser((user: any, done: any) => {
 // deserialize user 
 passport.deserializeUser((id: string, done: any) => { 
   User.findById(id, (err: Error , doc: IMongoDBUser ) => { 
-    // 
     return done(null, doc);
   })
 })
@@ -75,14 +80,8 @@ app.get('/auth/logout', (req: Request, res: Response, next: NextFunction) => {
     req.logout(function(err) {
       if (err) { 
         return next(err); }
-      // res.redirect('/');
     })
     res.send('Done')
-    // res.status(200).write(
-    //   'Logout successful!', 'utf8', () => { 
-    //     console.log('Logout successful!')
-    //   }
-    // )
   }
 })
 
@@ -100,7 +99,7 @@ app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect( process.env.HOSTED_CLIENT_URI || 'http://localhost:3000' );
+    res.redirect( 'https://oauth-frontend.netlify.app' );
 });
 
 // github authenciation function
@@ -112,10 +111,10 @@ app.get('/auth/github',
 );
 
 app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: 'http://localhost:3000/login' }),
+  passport.authenticate('github', { failureRedirect: 'https://oauth-frontend.netlify.app/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect( process.env.HOSTED_CLIENT_URI || 'http://localhost:3000' );
+    res.redirect( 'https://oauth-frontend.netlify.app' );
   }
 );
 

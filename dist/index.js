@@ -35,10 +35,16 @@ const options = {
 // app middlewares
 app.use(express_1.default.json());
 app.use((0, cors_1.default)(options));
+app.set("trust proxy", 1);
 app.use((0, express_session_1.default)({
     secret: process.env.SESSION_SECRET_KEY || 'John is a cat Man',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
@@ -49,7 +55,6 @@ passport_1.default.serializeUser((user, done) => {
 // deserialize user 
 passport_1.default.deserializeUser((id, done) => {
     User_1.default.findById(id, (err, doc) => {
-        // 
         return done(null, doc);
     });
 });
@@ -66,14 +71,8 @@ app.get('/auth/logout', (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            // res.redirect('/');
         });
         res.send('Done');
-        // res.status(200).write(
-        //   'Logout successful!', 'utf8', () => { 
-        //     console.log('Logout successful!')
-        //   }
-        // )
     }
 });
 // google authenciation function
