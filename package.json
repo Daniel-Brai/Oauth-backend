@@ -4,7 +4,7 @@
   "description": "A server for oauth2.0 services",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc --project ./",
+    "build": "npx --package typescript tsc --project ./",
     "start": "node dist/index.js",
     "heroku-prebuild": "npm install",
     "dev": "concurrently \"npx tsc --project ./ --watch\" \"nodemon -q dist/index.js\""
